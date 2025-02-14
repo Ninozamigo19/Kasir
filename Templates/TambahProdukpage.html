@@ -1,0 +1,35 @@
+{% extends "Sidebar.html" %}
+
+{% block title %}
+Tambah Produk
+{% endblock %}
+
+{% block body1 %}
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-2xl font-bold mb-6 text-center">Tambah Produk</h1>
+        <form action="{{ url_for('addbarang') }}" method="post">
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Nama Barang</label>
+                <input type="text" id="namaproduk" name="namaproduk" placeholder="Masukan nama barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700">Harga barang</label>
+                <input type="number" id="harga" name="harga" step="0.01" min="0" placeholder="Masukan harga barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div class="mb-4">
+                <label for="username" class="block text-sm font-medium text-gray-700">Jumlah barang</label>
+                <input type="number" id="stok" name="stok" min="0" placeholder="Masukan jumlah barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <!-- <div class="mb-6">
+                <label for="password" class="block text-sm font-medium text-gray-700">Status</label>
+                <select id="status" name="status" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="admin">Dijual</option>
+                    <option value="petugas">Tidak Dijual</option>
+                </select>
+            </div> -->
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">Tambah</button>
+        </form>
+    </div>
+</body>
+{% endblock %}

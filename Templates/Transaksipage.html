@@ -1,0 +1,94 @@
+{% extends "Sidebar.html" %}
+
+{% block title %}
+Transaksi
+{% endblock %}
+
+{% block body1 %}
+<body class="bg-gray-100 p-4">
+    <div class="container mx-auto flex">
+        <!-- Bagian kiri (search box dan daftar barang) -->
+        <div class="w-2/3 bg-white p-4 rounded shadow">
+            <!-- Search Box -->
+            <div class="mb-4">
+                <input
+                    type="text"
+                    placeholder="Search box"
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+            </div>
+
+            <!-- Tabel daftar barang -->
+            <table class="w-full border-collapse border border-gray-300">
+                {% for produk in produk_list %}
+                <tr>
+                    <td class="border border-gray-300 p-2">{{ produk [0] }}</td>
+                    <td class="border border-gray-300 p-2">{{ produk [1] }}</td>
+                    <td class="border border-gray-300 p-2">{{ produk [2] }}</td>
+                    <td class="border border-gray-300 p-2">{{ produk [3] }}</td>
+                    <td class="border border-gray-300 p-2">
+                        <button class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">Tambah</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        <!-- Bagian kanan (keranjang dan form pembayaran) -->
+        <div class="w-1/3 ml-4 bg-blue-100 p-4 rounded shadow">
+            <!-- Daftar barang di keranjang -->
+            <div class="mb-4 bg-white p-4 rounded shadow">
+                <h2 class="text-lg font-bold mb-2">Keranjang</h2>
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 p-2 text-left">Nama Barang</th>
+                            <th class="border border-gray-300 p-2 text-left">Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Contoh row (isi dapat ditambahkan secara dinamis) -->
+                        <tr>
+                            <td class="border border-gray-300 p-2">Barang A</td>
+                            <td class="border border-gray-300 p-2">Rp 10.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Form pembayaran -->
+            <div class="mb-4">
+                <label class="block font-bold mb-1">SubTotal</label>
+                <input
+                    type="text"
+                    placeholder="SubTotal"
+                    class="w-full p-2 border border-gray-300 rounded"
+                    readonly
+                />
+            </div>
+            <div class="mb-4">
+                <label class="block font-bold mb-1">Uang Diterima</label>
+                <input
+                    type="number"
+                    placeholder="Masukkan uang diterima"
+                    class="w-full p-2 border border-gray-300 rounded"
+                />
+            </div>
+            <div class="mb-4">
+                <label class="block font-bold mb-1">Kembalian</label>
+                <input
+                    type="text"
+                    placeholder="Kembalian"
+                    class="w-full p-2 border border-gray-300 rounded"
+                    readonly
+                />
+            </div>
+
+            <!-- Tombol Bayar -->
+            <button class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600">
+                Tombol Bayar
+            </button>
+        </div>
+    </div>
+</body>
+{% endblock %}

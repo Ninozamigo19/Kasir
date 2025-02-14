@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sidebar Base{% endblock %}</title>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
+</head>
+<body class="bg-gray-100 flex">
+    <!-- Sidebar -->
+    <div class="w-64 h-screen bg-blue-600 text-white flex flex-col">
+        <div class="p-4 text-2xl font-bold border-b border-blue-700">
+            Kasir App
+        </div>
+        <nav class="flex-grow p-4">
+            <a href="{{ url_for('home') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Dashboard</a>
+            <a href="{{ url_for('jual') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Transaksi</a>
+            <a href="{{ url_for('barang') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Produk</a>
+            <a href="{{ url_for('register') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Akun</a>
+            <a href="{{ url_for('logout') }}"class="block p-2 mb-2 bg-red-500 rounded hover:bg-red-400">Logout</a>
+        </nav>
+    </div>
+
+    <!-- Konten Utama -->
+    <main class="flex-grow p-6">
+        {% block body1 %}
+        <!-- Konten akan diisi di halaman lain -->
+        {% endblock %}
+    </main>
+</body>
+</html>
