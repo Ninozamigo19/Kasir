@@ -27,8 +27,11 @@ Home
                 <td class="border border-gray-300 p-2">Rp {{ produk[2] }}</td>
                 <td class="border border-gray-300 p-2">{{ produk[3] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
-                    <a href="/edit_produk/{{ produk[0] }}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
-                    <a href="/hapus_produk/{{ produk[0] }}" class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</a>
+                    <a href="{{url_for('edit', produk_id=produk[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
+                    <form method="POST" action="{{ url_for('hapus', produk_id=produk[0]) }}" style="display: inline;">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
+                    </form>
                 </td>
             </tr>
             {% endfor %}

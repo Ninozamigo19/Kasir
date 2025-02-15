@@ -6,6 +6,7 @@ from Page.login import login
 from Page.register import signup
 from Page.produk import produk
 from Page.TambahBarang import addproduk
+from Page.HapusEditproduk import hapus_produk, edit_produk
 
 app = Flask (__name__)
 app.secret_key = config('SECRET_KEY')
@@ -46,6 +47,14 @@ def barang():
 @app.route('/addproduk', methods=['GET', 'POST'])
 def addbarang():
     return addproduk()
+
+@app.route('/hapus_produk/<int:produk_id>', methods=['POST'])
+def hapus(produk_id):
+    return hapus_produk(produk_id)
+
+@app.route('/edit_produk/<int:produk_id>', methods=['GET', 'POST'])
+def edit(produk_id):
+    return edit_produk(produk_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
