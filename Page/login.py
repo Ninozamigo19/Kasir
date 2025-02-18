@@ -53,7 +53,7 @@ def login():
 def logout():
     resp = make_response(redirect(url_for('signin')))
     resp.delete_cookie('userid')  # Hapus cookie saat logout
-    flash('You have been logged out.', 'info')
+    # flash('You have been logged out.', 'info')
     return resp
 
 # Home route (protected)
@@ -61,7 +61,7 @@ def logout():
 def home():
     userid = request.cookies.get('userid')
     if not userid:
-        flash('You must be logged in to access this page.', 'danger')
+        # flash('You must be logged in to access this page.', 'danger')
         return redirect(url_for('login'))
 
     return render_template('Homepage.html')

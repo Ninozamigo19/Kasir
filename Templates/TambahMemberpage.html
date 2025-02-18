@@ -1,0 +1,28 @@
+{% extends "Sidebar.html" %}
+
+{% block title %}
+Tambah Pelanggan
+{% endblock %}
+
+{% block body1 %}
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-2xl font-bold mb-6 text-center">Tambah Pelanggan</h1>
+        <form action="{{ url_for('addpelanggan') }}" method="post">
+            <div class="mb-4">
+                <label for="namapelanggan" class="block text-sm font-medium text-gray-700">Nama Pelanggan</label>
+                <input type="text" id="namapelanggan" name="namapelanggan" placeholder="Masukan nama pelanggan" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div class="mb-6">
+                <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat Pelanggan</label>
+                <input type="textarea" id="alamat" name="alamat" placeholder="Masukan alamat pelanggan" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <div class="mb-4">
+                <label for="notlp" class="block text-sm font-medium text-gray-700">Nomor Telepon</label>
+                <input type="text" id="notlp" name="notlp" placeholder="Masukan nomor telepon" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+            <button type="submit" class="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">Tambah</button>
+        </form>
+    </div>
+</body>
+{% endblock %}

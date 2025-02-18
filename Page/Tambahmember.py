@@ -6,29 +6,29 @@ app.secret_key = 'SECRET_KEY'  # Ganti dengan kunci rahasia Anda
 
 # Route Signup
 # @app.route('/signup', methods=['GET', 'POST'])
-def signup():
+def addmember():
     if request.method == 'POST':
-        nama = request.form['nama']
-        username = request.form['username']
-        password = request.form['password']
-        role = request.form['role']
-
+        nama = request.form['namapelanggan']
+        alamat = request.form['alamat']
+        notlp = request.form['notlp']
 
         # Simpan user ke database
         try:
+            print(nama, alamat, notlp)
             conn = get_db()
             cursor = conn.cursor()
             cursor.execute(
-                "INSERT INTO pengguna (namalengkap, username, password, hakakses) VALUES (%s, %s, %s, %s)", 
-                (nama, username, password, role)
+                "INSERT INTO pelanggan (namapelanggan, alamat, nomortelepon) VALUES (%s, %s, %s)", 
+                (nama, alamat, notlp)
             )
             conn.commit()
             cursor.close()
             conn.close()
             # flash('Signup berhasil! Silakan login.', 'success')
-            return redirect(url_for('signin'))
+            return redirect(url_for('pelanggan'))
         except Exception as e:
+            print(e)
             # flash(f'Error: {str(e)}', 'danger')
-            return redirect(url_for('register'))
+            return redirect(url_for('addpelanggan'))
 
-    return render_template('Signuppage.html')  # Pastikan template ada
+    return render_template('TambahMemberpage.html')  # Pastikan template ada

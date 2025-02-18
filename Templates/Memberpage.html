@@ -1,0 +1,41 @@
+{% extends "Sidebar.html" %}
+
+{% block title %}
+Member
+{% endblock %}
+
+{% block body1 %}
+<body class="p-8 bg-gray-100">
+    <h1 class="text-2xl font-bold mb-4">Daftar Pelanggan</h1>
+    <button class="mb-4 bg-blue-400 text-black px-3 py-1 rounded hover:bg-blue-600"><a href="{{url_for('addpelanggan')}}">tambah pelanggan</a></button>
+
+    <table class="w-full border-collapse border border-gray-300 bg-white">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 p-2">ID pelanggan</th>
+                <th class="border border-gray-300 p-2">Nama pelanggan</th>
+                <th class="border border-gray-300 p-2">alanat pelanggan</th>
+                <th class="border border-gray-300 p-2">nomor telepon</th>
+                <th class="border border-gray-300 p-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pelanggan in member_list %}
+            <tr>
+                <td class="border border-gray-300 p-2">{{ pelanggan[0] }}</td>
+                <td class="border border-gray-300 p-2">{{ pelanggan[1] }}</td>
+                <td class="border border-gray-300 p-2">{{ pelanggan[2] }}</td>
+                <td class="border border-gray-300 p-2">{{ pelanggan[3] }}</td>
+                <td class="border border-gray-300 p-2 items-center justify-center">
+                    <a href="{{url_for('editmember', member_id=pelanggan[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
+                    <form method="POST" action="{{ url_for('hapusmember', member_id=pelanggan[0]) }}" style="display: inline;">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
+                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+{% endblock %}

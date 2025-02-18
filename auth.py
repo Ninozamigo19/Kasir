@@ -4,9 +4,14 @@ from decouple import config
 from Page.app import transaksi
 from Page.login import login
 from Page.register import signup
-from Page.produk import produk
+from Page.produk import produk, tambah_ke_keranjang
 from Page.TambahBarang import addproduk
 from Page.HapusEditproduk import hapus_produk, edit_produk
+from Page.user import akun
+from Page.HapusEditakun import hapus_akun, edit_akun
+from Page.member import member
+from Page.Tambahmember import addmember
+from Page.HapusEditpelanggan import hapus_pelanggan, edit_pelanggan
 
 app = Flask (__name__)
 app.secret_key = config('SECRET_KEY')
@@ -55,6 +60,38 @@ def hapus(produk_id):
 @app.route('/edit_produk/<int:produk_id>', methods=['GET', 'POST'])
 def edit(produk_id):
     return edit_produk(produk_id)
+
+@app.route('/akun', methods=['GET'])
+def account():
+    return akun()
+
+@app.route('/hapus_akun/<int:user_id>', methods=['POST'])
+def hapusakun(user_id):
+    return hapus_akun(user_id)
+
+@app.route('/edit_akun/<int:user_id>', methods=['GET', 'POST'])
+def editakun(user_id):
+    return edit_akun(user_id)
+
+@app.route('/tambah_ke_keranjang', methods=['POST'])
+def tambahkeranjang():
+    return tambah_ke_keranjang()
+
+@app.route('/member', methods=['GET'])
+def pelanggan():
+    return member()
+
+@app.route('/addmember', methods=['GET', 'POST'])
+def addpelanggan():
+    return addmember()
+
+@app.route('/hapus_pelanggan/<int:member_id>', methods=['POST'])
+def hapusmember(member_id):
+    return hapus_pelanggan(member_id)
+
+@app.route('/edit_pelanggan/<int:member_id>', methods=['GET', 'POST'])
+def editmember(member_id):
+    return edit_pelanggan(member_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
