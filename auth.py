@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, make_response
 from decouple import config
 
-from Page.app import transaksi
+from Page.app import transaksi, penjualan
 from Page.login import login
 from Page.register import signup
 from Page.produk import produk, tambah_ke_keranjang
@@ -41,7 +41,11 @@ def home():
 def register():
     return signup()
 
-@app.route('/transaksi', methods=['GET', 'POST'])
+@app.route('/transaksi', methods=['GET'])
+def penjualan():
+    return penjualan()
+
+@app.route('/jual', methods=['POST'])
 def jual():
     return transaksi()
 

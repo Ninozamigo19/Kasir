@@ -72,7 +72,7 @@ Transaksi
         </div>
 
         <!-- Form Pembayaran -->
-        <form method="POST" action="{{ url_for('jual') }}">
+        <form method="post" action="{{ url_for('jual') }}">
             <div class="mb-4">
                 <label for="pelangganid" class="block font-bold text-gray-700 mb-1">Pilih Pelanggan</label>
                 <select
@@ -244,12 +244,16 @@ Transaksi
                 items.push({ namaBarang, jumlah });
             }
 
+            const pelangganid = document.getElementById("pelangganid").value;
+            const userid = document.getElementById("userid").value;
+            const totalharga = document.getElementById("subtotal").value;
+
             fetch("{{ url_for('jual') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ items })
+                body: JSON.stringify({ items, pelangganid, userid, totalharga })
             })
             .then(response => response.json())
             .then(data => {
