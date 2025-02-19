@@ -13,6 +13,7 @@ from Page.HapusEditakun import hapus_akun, edit_akun
 from Page.member import member
 from Page.Tambahmember import addmember
 from Page.HapusEditpelanggan import hapus_pelanggan, edit_pelanggan
+from Page.Detailpenjual import detail_penjualan, detail_jual, unduh_pdf
 
 app = Flask (__name__)
 app.secret_key = config('SECRET_KEY')
@@ -99,6 +100,18 @@ def editmember(member_id):
 @app.template_filter('currency')
 def currency_filter(value):
     return locale.currency(value, grouping=True)
+
+@app.route('/detail_penjualan', methods=['GET'])
+def detailpenjualan():
+    return detail_penjualan()
+
+@app.route('/detailjual/<int:penjualan_id>', methods=['GET'])
+def detailjual(penjualan_id):
+    return detail_jual(penjualan_id)
+
+@app.route('/unduh_pdf/<int:penjualan_id>', methods=['GET'])
+def unduhpdf(penjualan_id):
+    return unduh_pdf(penjualan_id)
 
 if __name__ == '__main__':
     app.run(debug=True)

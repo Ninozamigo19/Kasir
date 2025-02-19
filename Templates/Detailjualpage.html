@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Jual</title>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-6 rounded-lg shadow-md w-full">
+      <!-- Nama Pelanggan dan Tanggal Penjualan -->
+      <div class="mb-6">
+        <p class="text-lg font-semibold">Nama Pelanggan: {{ detail[1] }}</p>
+        <p class="text-gray-600">Tanggal Penjualan: {{ detail[2] }}</p>
+      </div>
+  
+      <!-- Tabel Daftar Produk -->
+      <div class="border-t border-gray-300 pt-4">
+        <table class="w-full border-collapse border border-gray-300">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="border border-gray-300 px-4 py-2 text-left">Detail ID</th>
+              <th class="border border-gray-300 px-4 py-2 text-left">Nama Produk</th>
+              <th class="border border-gray-300 px-4 py-2 text-left">Harga Produk</th>
+              <th class="border border-gray-300 px-4 py-2 text-left">Jumlah Produk</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for detail_produk in detail_produk_list %}
+            <tr>
+              <td class="border border-gray-300 px-4 py-2">{{ detail_produk[0] }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ detail_produk[1] }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ detail_produk[2]|int|currency }}</td>
+              <td class="border border-gray-300 px-4 py-2">{{ detail_produk[3] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- Tombol -->
+      <div class="mt-8 flex justify-between">
+        <a href="{{ url_for('unduhpdf', penjualan_id=detail[0]) }}" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Unduh PDF</a>
+        <button onclick="closeDetailModal()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Kembali</button>
+      </div>
+    </div>
+</body>
+</html>

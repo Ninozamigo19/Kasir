@@ -1,0 +1,61 @@
+{% extends "Sidebar.html" %}
+
+{% block title %}
+Detail Penjualan
+{% endblock %}
+
+{% block body1 %}
+<body class="p-8 bg-gray-100">
+    <h1 class="text-2xl font-bold mb-4">Daftar Penjualan</h1>
+
+    <table class="w-full border-collapse border border-gray-300 bg-white">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-gray-300 p-2">ID Penjualan</th>
+                <th class="border border-gray-300 p-2">Nama Pelanggan</th>
+                <th class="border border-gray-300 p-2">Tanggal Transaksi</th>
+                <th class="border border-gray-300 p-2">Total Harga</th>
+                <th class="border border-gray-300 p-2"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for penjualan in penjualan_list %}
+            <tr>
+                <td class="border border-gray-300 p-2">{{ penjualan[0] }}</td>
+                <td class="border border-gray-300 p-2">{{ penjualan[1] }}</td>
+                <td class="border border-gray-300 p-2">{{ penjualan[2] }}</td>
+                <td class="border border-gray-300 p-2">{{ penjualan[3]|int|currency }}</td>
+                <td class="border border-gray-300 p-2">
+                    <button onclick="openDetailModal('{{ penjualan[0] }}')" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Lihat Detail</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal Popup -->
+    <div id="detailModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-md w-1/2">
+            <button onclick="closeDetailModal()" class="absolute top-2 right-2 text-gray-600">&times;</button>
+            <div id="detailContent">
+                <!-- Detail content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDetailModal(penjualanId) {
+            fetch(`/detailjual/${penjualanId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('detailContent').innerHTML = html;
+                    document.getElementById('detailModal').classList.remove('hidden');
+                });
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.add('hidden');
+        }
+    </script>
+</body>
+{% endblock %}

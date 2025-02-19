@@ -176,7 +176,10 @@ Transaksi
             for (let i = 0; i < rows.length; i++) {
                 if (rows[i].dataset.productId === produkId) {
                     const jumlahCell = rows[i].cells[2];
-                    jumlahCell.textContent = parseInt(jumlahCell.textContent) + 1;
+                    const hargaCell = rows[i].cells[1];
+                    const jumlah = parseInt(jumlahCell.textContent) + 1;
+                    jumlahCell.textContent = jumlah;
+                    hargaCell.textContent = `Rp.${(hargaBarang * jumlah).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
                     barangDitemukan = true;
                     break;
                 }
@@ -187,7 +190,7 @@ Transaksi
                 newRow.dataset.productId = produkId;
                 newRow.innerHTML = `
                     <td class="border border-gray-300 p-2">${namaBarang}</td>
-                    <td class="border border-gray-300 p-2">Rp.${hargaBarang}</td>
+                    <td class="border border-gray-300 p-2">Rp.${hargaBarang.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</td>
                     <td class="border border-gray-300 p-2">1</td>
                 `;
                 keranjang.appendChild(newRow);
@@ -197,21 +200,26 @@ Transaksi
         // Fungsi untuk menghitung subtotal
         function updateSubtotal() {
             const keranjang = document.getElementById("keranjang-barang").getElementsByTagName("tr");
-            let subtotal = new Decimal(0);
+            let subtotal = 0;
             for (let i = 0; i < keranjang.length; i++) {
-                const harga = new Decimal(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
+                const harga = parseFloat(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
                 const jumlah = parseInt(keranjang[i].cells[2].textContent, 10);
-                subtotal = subtotal.plus(harga.times(jumlah));
+                subtotal += harga * jumlah;
             }
-            document.getElementById("subtotal").value = `Rp.${subtotal.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+            document.getElementById("subtotal").value = formatRupiah(subtotal);
         }
 
         // Fungsi untuk menghitung kembalian
         function hitungKembalian() {
-            const subtotal = new Decimal(document.getElementById("subtotal").value.replace("Rp", "").replace(/\./g, "").replace(",", ".") || 0);
-            const uangDiterima = new Decimal(document.getElementById("uang-diterima").value || 0);
-            const kembalian = uangDiterima.minus(subtotal);
-            document.getElementById("kembalian").value = kembalian.greaterThanOrEqualTo(0) ? `Rp.${kembalian.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}` : '';
+            const subtotal = parseFloat(document.getElementById("subtotal").value.replace("Rp", "").replace(/\./g, "").replace(",", ".") || 0);
+            const uangDiterima = parseFloat(document.getElementById("uang-diterima").value || 0);
+            const kembalian = uangDiterima - subtotal;
+            document.getElementById("kembalian").value = kembalian >= 0 ? formatRupiah(kembalian) : '';
+        }
+
+        // Fungsi untuk format Rupiah
+        function formatRupiah(angka) {
+            return `Rp.${angka.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
         }
 
         // Fungsi untuk filter tabel
