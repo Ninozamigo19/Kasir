@@ -1,10 +1,19 @@
 from flask import Flask, render_template, request, jsonify
 from Page.login import get_db
 from datetime import date
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
+import locale
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
+
+# Set locale to Indonesian Rupiah
+locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
+
+# Custom filter to format currency
+@app.template_filter('currency')
+def currency_filter(value):
+    return locale.currency(value, grouping=True)
 
 # Koneksi ke PostgreSQL
 conn = get_db()
@@ -24,7 +33,14 @@ def transaksi():
 
     try:
         cursor = conn.cursor()
-        totalharga = sum(Decimal(item['harga']) * item['jumlah'] for item in items)
+        totalharga = Decimal(0)
+        for item in items:
+            try:
+                harga = Decimal(str(item['harga']).replace("Rp", "").replace(".", "").replace(",", ".")).quantize(Decimal('0.01'))
+            except (InvalidOperation, TypeError):
+                return jsonify({"error": "Invalid price format"}), 400
+            jumlah = item['jumlah']
+            totalharga += harga * jumlah
 
         cursor.execute("""
             INSERT INTO penjualan (pelangganid, userid, totalharga, tanggalpenjualan)
@@ -34,11 +50,16 @@ def transaksi():
         penjualan_id = cursor.fetchone()[0]
 
         for item in items:
-            subtotal = Decimal(item['harga']) * item['jumlah']
+            try:
+                harga = Decimal(str(item['harga']).replace("Rp", "").replace(".", "").replace(",", ".")).quantize(Decimal('0.01'))
+            except (InvalidOperation, TypeError):
+                return jsonify({"error": "Invalid price format"}), 400
+            jumlah = item['jumlah']
+            subtotal = harga * jumlah
             cursor.execute("""
                 INSERT INTO detailpenjualan (penjualanid, produkid, jumlahproduk, subtotal)
                 VALUES (%s, %s, %s, %s)
-            """, (penjualan_id, item['productId'], item['jumlah'], subtotal))
+            """, (penjualan_id, item['productId'], jumlah, subtotal))
 
         conn.commit()
         cursor.close()

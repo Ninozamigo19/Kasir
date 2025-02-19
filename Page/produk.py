@@ -1,7 +1,16 @@
 from flask import Flask, render_template, request, jsonify
 from Page.login import get_db  # Fungsi koneksi ke database
+import locale
 
 app = Flask(__name__)
+
+# Set locale to Indonesian Rupiah
+locale.setlocale(locale.LC_ALL, 'id_ID.UTF-8')
+
+# Custom filter to format currency
+@app.template_filter('currency')
+def currency_filter(value):
+    return locale.currency(value, grouping=True)
 
 # Koneksi ke PostgreSQL
 conn = get_db()

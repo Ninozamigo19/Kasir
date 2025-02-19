@@ -24,7 +24,7 @@ Produk
             <tr>
                 <td class="border border-gray-300 p-2">{{ produk[0] }}</td>
                 <td class="border border-gray-300 p-2">{{ produk[1] }}</td>
-                <td class="border border-gray-300 p-2">Rp {{ produk[2] }}</td>
+                <td class="border border-gray-300 p-2">{{ produk[2]|int|currency }}</td>
                 <td class="border border-gray-300 p-2">{{ produk[3] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
                     <a href="{{url_for('edit', produk_id=produk[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>

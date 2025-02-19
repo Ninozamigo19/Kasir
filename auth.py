@@ -1,10 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, make_response
 from decouple import config
+import locale
 
 from Page.app import transaksi, penjualan
 from Page.login import login
 from Page.register import signup
-from Page.produk import produk, tambah_ke_keranjang
+from Page.produk import produk, tambah_ke_keranjang, currency_filter
 from Page.TambahBarang import addproduk
 from Page.HapusEditproduk import hapus_produk, edit_produk
 from Page.user import akun
@@ -94,6 +95,10 @@ def hapusmember(member_id):
 @app.route('/edit_pelanggan/<int:member_id>', methods=['GET', 'POST'])
 def editmember(member_id):
     return edit_pelanggan(member_id)
+
+@app.template_filter('currency')
+def currency_filter(value):
+    return locale.currency(value, grouping=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
