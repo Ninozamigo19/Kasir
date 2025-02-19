@@ -41,13 +41,11 @@ def home():
 def register():
     return signup()
 
-@app.route('/transaksi', methods=['GET'])
-def penjualan():
-    return penjualan()
-
-@app.route('/jual', methods=['POST'])
+@app.route('/transaksi', methods=['GET', 'POST'])
 def jual():
-    return transaksi()
+    if request.method == 'POST':
+        return transaksi()
+    return penjualan()
 
 @app.route('/produk', methods=['GET'])
 def barang():

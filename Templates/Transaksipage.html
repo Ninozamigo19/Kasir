@@ -33,7 +33,7 @@ Transaksi
                 </thead>
                 <tbody id="daftar-barang">
                     {% for produk in produk_list %}
-                    <tr>
+                    <tr data-product-id="{{ produk[0] }}">
                         <td class="border border-gray-300 p-2">{{ produk[0] }}</td>
                         <td class="border border-gray-300 p-2">{{ produk[1] }}</td>
                         <td class="border border-gray-300 p-2">Rp.{{ produk[2] }}</td>
@@ -52,106 +52,106 @@ Transaksi
             </table>
         </div>
 
-            <!-- Bagian kanan (keranjang dan form pembayaran) -->
-    <div class="w-full lg:w-1/3 bg-gray-50 p-6 rounded shadow">
-        <!-- Keranjang Barang -->
-        <h2 class="text-lg font-bold mb-4 text-gray-700">Keranjang</h2>
-        <div class="overflow-auto max-h-64 mb-6">
-            <table class="w-full border-collapse border border-gray-300">
-                <thead>
-                    <tr class="bg-gray-200 sticky top-0">
-                        <th class="border border-gray-300 p-2 text-left">Nama Barang</th>
-                        <th class="border border-gray-300 p-2 text-left">Harga</th>
-                        <th class="border border-gray-300 p-2 text-left">Jumlah</th>
-                    </tr>
-                </thead>
-                <tbody id="keranjang-barang" class="bg-white overflow-y-auto max-h-5">
-                    <!-- Baris barang akan ditambahkan di sini -->
-                </tbody>
-            </table>
+        <!-- Bagian kanan (keranjang dan form pembayaran) -->
+        <div class="w-full lg:w-1/3 bg-gray-50 p-6 rounded shadow">
+            <!-- Keranjang Barang -->
+            <h2 class="text-lg font-bold mb-4 text-gray-700">Keranjang</h2>
+            <div class="overflow-auto max-h-64 mb-6">
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-200 sticky top-0">
+                            <th class="border border-gray-300 p-2 text-left">Nama Barang</th>
+                            <th class="border border-gray-300 p-2 text-left">Harga</th>
+                            <th class="border border-gray-300 p-2 text-left">Jumlah</th>
+                        </tr>
+                    </thead>
+                    <tbody id="keranjang-barang" class="bg-white overflow-y-auto max-h-5">
+                        <!-- Baris barang akan ditambahkan di sini -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Form Pembayaran -->
+            <form id="form-transaksi">
+                <div class="mb-4">
+                    <label for="pelangganid" class="block font-bold text-gray-700 mb-1">Pilih Pelanggan</label>
+                    <select
+                        name="pelangganid"
+                        id="pelangganid"
+                        class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
+                    >
+                        <option value="">-- Pilih Pelanggan --</option>
+                        {% for pelanggan in pelanggan_list %}
+                        <option value="{{ pelanggan[0] }}">{{ pelanggan[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="userid" class="block font-bold text-gray-700 mb-1">Pilih Pengguna</label>
+                    <select
+                        name="userid"
+                        id="userid"
+                        class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
+                        required
+                    >
+                        <option value="">-- Pilih Pengguna --</option>
+                        {% for pengguna in pengguna_list %}
+                        <option value="{{ pengguna[0] }}">{{ pengguna[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label for="subtotal" class="block font-bold text-gray-700 mb-1">SubTotal</label>
+                    <input
+                        type="text"
+                        id="subtotal"
+                        name="totalharga"
+                        placeholder="SubTotal"
+                        class="w-full p-2 border border-gray-300 rounded bg-gray-100"
+                        readonly
+                    />
+                </div>
+
+                <div class="mb-4">
+                    <label for="uang-diterima" class="block font-bold text-gray-700 mb-1">Uang Diterima</label>
+                    <input
+                        type="number"
+                        id="uang-diterima"
+                        placeholder="Masukkan uang diterima"
+                        class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
+                        oninput="hitungKembalian()"
+                    />
+                </div>
+
+                <div class="mb-4">
+                    <label for="kembalian" class="block font-bold text-gray-700 mb-1">Kembalian</label>
+                    <input
+                        type="text"
+                        id="kembalian"
+                        placeholder="Kembalian"
+                        class="w-full p-2 border border-gray-300 rounded bg-gray-100"
+                        readonly
+                    />
+                </div>
+
+                <!-- Tombol Bayar -->
+                <button
+                    type="submit"
+                    class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+                >
+                    Bayar
+                </button>
+            </form>
         </div>
-
-        <!-- Form Pembayaran -->
-        <form method="post" action="{{ url_for('jual') }}">
-            <div class="mb-4">
-                <label for="pelangganid" class="block font-bold text-gray-700 mb-1">Pilih Pelanggan</label>
-                <select
-                    name="pelangganid"
-                    id="pelangganid"
-                    class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
-                >
-                    <option value="">-- Pilih Pelanggan --</option>
-                    {% for pelanggan in pelanggan_list %}
-                    <option value="{{ pelanggan[0] }}">{{ pelanggan[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label for="userid" class="block font-bold text-gray-700 mb-1">Pilih Pengguna</label>
-                <select
-                    name="userid"
-                    id="userid"
-                    class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
-                    required
-                >
-                    <option value="">-- Pilih Pengguna --</option>
-                    {% for pengguna in pengguna_list %}
-                    <option value="{{ pengguna[0] }}">{{ pengguna[1] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label for="subtotal" class="block font-bold text-gray-700 mb-1">SubTotal</label>
-                <input
-                    type="text"
-                    id="subtotal"
-                    name="totalharga"
-                    placeholder="SubTotal"
-                    class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                    readonly
-                />
-            </div>
-
-            <div class="mb-4">
-                <label for="uang-diterima" class="block font-bold text-gray-700 mb-1">Uang Diterima</label>
-                <input
-                    type="number"
-                    id="uang-diterima"
-                    placeholder="Masukkan uang diterima"
-                    class="w-full p-2 border border-gray-300 rounded focus:outline-blue-400"
-                    oninput="hitungKembalian()"
-                />
-            </div>
-
-            <div class="mb-4">
-                <label for="kembalian" class="block font-bold text-gray-700 mb-1">Kembalian</label>
-                <input
-                    type="text"
-                    id="kembalian"
-                    placeholder="Kembalian"
-                    class="w-full p-2 border border-gray-300 rounded bg-gray-100"
-                    readonly
-                />
-            </div>
-
-            <!-- Tombol Bayar -->
-            <button
-                type="submit"
-                class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
-            >
-                Bayar
-            </button>
-        </form>
     </div>
-
 
     <script>
         // Fungsi untuk menambahkan barang ke keranjang
         function tambahKeKeranjang(button) {
             const row = button.parentElement.parentElement;
-            const produkId = row.cells[0].textContent; // Ambil ID produk dari kolom pertama
+            const produkId = row.dataset.productId; // Ambil ID produk dari data attribute
             const namaBarang = row.cells[1].textContent; // Ambil nama barang dari kolom kedua
             const hargaBarang = parseFloat(row.cells[2].textContent.replace("Rp.", "").replace(",", "")); // Ambil harga barang dari kolom ketiga
             const stokCell = row.cells[3]; // Ambil sel stok
@@ -160,7 +160,7 @@ Transaksi
             if (stok > 0) {
                 stok -= 1; // Kurangi stok
                 stokCell.textContent = stok; // Perbarui tampilan stok
-                updateKeranjang(namaBarang, hargaBarang);
+                updateKeranjang(produkId, namaBarang, hargaBarang);
                 updateSubtotal();
             } else {
                 alert("Stok barang tidak mencukupi.");
@@ -168,14 +168,13 @@ Transaksi
         }
 
         // Fungsi untuk memperbarui keranjang
-        function updateKeranjang(namaBarang, hargaBarang) {
+        function updateKeranjang(produkId, namaBarang, hargaBarang) {
             const keranjang = document.getElementById("keranjang-barang");
             const rows = keranjang.getElementsByTagName("tr");
             let barangDitemukan = false;
 
             for (let i = 0; i < rows.length; i++) {
-                const nama = rows[i].cells[0].textContent;
-                if (nama === namaBarang) {
+                if (rows[i].dataset.productId === produkId) {
                     const jumlahCell = rows[i].cells[2];
                     jumlahCell.textContent = parseInt(jumlahCell.textContent) + 1;
                     barangDitemukan = true;
@@ -185,6 +184,7 @@ Transaksi
 
             if (!barangDitemukan) {
                 const newRow = document.createElement("tr");
+                newRow.dataset.productId = produkId;
                 newRow.innerHTML = `
                     <td class="border border-gray-300 p-2">${namaBarang}</td>
                     <td class="border border-gray-300 p-2">Rp.${hargaBarang.toLocaleString("id-ID")}</td>
@@ -197,63 +197,62 @@ Transaksi
         // Fungsi untuk menghitung subtotal
         function updateSubtotal() {
             const keranjang = document.getElementById("keranjang-barang").getElementsByTagName("tr");
-            let subtotal = 0;
+            let subtotal = new Decimal(0);
             for (let i = 0; i < keranjang.length; i++) {
-                const harga = parseFloat(keranjang[i].cells[1].textContent.replace("Rp.", "").replace(",", ""));
+                const harga = new Decimal(keranjang[i].cells[1].textContent.replace("Rp.", "").replace(",", ""));
                 const jumlah = parseInt(keranjang[i].cells[2].textContent, 10);
-                subtotal += harga * jumlah;
+                subtotal = subtotal.plus(harga.times(jumlah));
             }
-            document.getElementById("subtotal").value = subtotal.toFixed(2);
+            document.getElementById("subtotal").value = subtotal.toFixed(6);
         }
 
         // Fungsi untuk menghitung kembalian
         function hitungKembalian() {
-            const subtotal = parseFloat(document.getElementById("subtotal").value.replace(",", "") || 0);
-            const uangDiterima = parseFloat(document.getElementById("uang-diterima").value || 0);
-            const kembalian = uangDiterima - subtotal;
-            document.getElementById("kembalian").value = kembalian >= 0 ? kembalian.toLocaleString("id-ID") : '';
+            const subtotal = new Decimal(document.getElementById("subtotal").value.replace(",", "") || 0);
+            const uangDiterima = new Decimal(document.getElementById("uang-diterima").value || 0);
+            const kembalian = uangDiterima.minus(subtotal);
+            document.getElementById("kembalian").value = kembalian.greaterThanOrEqualTo(0) ? kembalian.toFixed(6) : '';
         }
 
         // Fungsi untuk filter tabel
-        function filterTable() {
+        function filterTabel() {
             const searchValue = document.getElementById("search-box").value.toLowerCase();
             const rows = document.getElementById("daftar-barang").getElementsByTagName("tr");
 
             for (let i = 0; i < rows.length; i++) {
                 const namaBarang = rows[i].cells[1].textContent.toLowerCase();
-
-                // Tampilkan/hide row berdasarkan kesesuaian nama barang dengan search input
-                if (namaBarang.includes(searchValue)) {
-                    rows[i].style.display = "";
-                } else {
-                    rows[i].style.display = "none";
-                }
+                rows[i].style.display = namaBarang.includes(searchValue) ? "" : "none";
             }
         }
 
-        // Fungsi untuk mengurangi stok di database saat tombol bayar diklik
-        document.querySelector('form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Mencegah form submit default
+        // Fungsi untuk mengirim data transaksi menggunakan fetch dengan Content-Type JSON
+        document.getElementById('form-transaksi').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const pelangganId = document.getElementById("pelangganid").value;
+            const userId = document.getElementById("userid").value;
 
             const keranjang = document.getElementById("keranjang-barang").getElementsByTagName("tr");
             const items = [];
 
             for (let i = 0; i < keranjang.length; i++) {
+                const productId = keranjang[i].dataset.productId;
                 const namaBarang = keranjang[i].cells[0].textContent;
+                const harga = parseFloat(keranjang[i].cells[1].textContent.replace("Rp.", "").replace(",", ""));
                 const jumlah = parseInt(keranjang[i].cells[2].textContent, 10);
-                items.push({ namaBarang, jumlah });
+                items.push({ productId, namaBarang, harga, jumlah });
             }
-
-            const pelangganid = document.getElementById("pelangganid").value;
-            const userid = document.getElementById("userid").value;
-            const totalharga = document.getElementById("subtotal").value;
 
             fetch("{{ url_for('jual') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ items, pelangganid, userid, totalharga })
+                body: JSON.stringify({
+                    pelangganId,
+                    userId,
+                    items
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -261,23 +260,15 @@ Transaksi
                     alert(data.error);
                 } else {
                     alert(data.message);
-                    // Reset keranjang dan subtotal
+                    // Reset keranjang & form
                     document.getElementById("keranjang-barang").innerHTML = '';
-                    document.getElementById("subtotal").value = '0.00';
+                    document.getElementById("subtotal").value = '0.000000';
                     document.getElementById("uang-diterima").value = '';
                     document.getElementById("kembalian").value = '';
-                    // Reset stok di tabel daftar barang
-                    const rows = document.getElementById("daftar-barang").getElementsByTagName("tr");
-                    for (let i = 0; i < rows.length; i++) {
-                        rows[i].cells[3].textContent = data.stok[i];
-                    }
                 }
             })
-            .catch(error => {
-                console.error("Error:", error);
-            });
+            .catch(error => console.error("Error:", error));
         });
     </script>
-    
 </body>
 {% endblock %}
