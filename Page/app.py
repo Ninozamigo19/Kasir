@@ -60,6 +60,13 @@ def transaksi():
                 INSERT INTO detailpenjualan (penjualanid, produkid, jumlahproduk, subtotal)
                 VALUES (%s, %s, %s, %s)
             """, (penjualan_id, item['productId'], jumlah, subtotal))
+            
+            # Update the product stock
+            cursor.execute("""
+                UPDATE produk
+                SET stok = stok - %s
+                WHERE produkid = %s
+            """, (jumlah, item['productId']))
 
         conn.commit()
         cursor.close()
