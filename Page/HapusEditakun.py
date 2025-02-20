@@ -5,17 +5,17 @@ app = Flask(__name__)
 
 conn = get_db()
 
-# @app.route('/hapus_akun/<int:userid>', methods=['POST'])
+@app.route('/hapus_akun/<int:userid>', methods=['POST'])
 def hapus_akun(user_id):
     cursor = conn.cursor()
     cursor.execute("DELETE FROM pengguna WHERE userid = %s", (user_id,))
     conn.commit()
     cursor.close()
 
-    # flash('Akun berhasil dihapus.', 'success')
+    flash('Akun berhasil dihapus.', 'success')
     return redirect(url_for('account'))
 
-# @app.route('/edit_akun/<int:userid>', methods=['GET', 'POST'])
+@app.route('/edit_akun/<int:userid>', methods=['GET', 'POST'])
 def edit_akun(user_id):
     cursor = conn.cursor()
     cursor.execute("SELECT userid, namalengkap, username, password, hakakses FROM pengguna WHERE userid = %s", (user_id,))
@@ -50,5 +50,4 @@ def edit_akun(user_id):
         'hakakses': result[4]
     }
 
-    cursor.close()
     return render_template('Editakun.html', akun=akun)

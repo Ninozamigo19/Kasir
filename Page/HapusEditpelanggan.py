@@ -8,7 +8,7 @@ conn = get_db()
 # @app.route('/hapus_pelanggan/<int:userid>', methods=['POST'])
 def hapus_pelanggan(member_id):
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM pelangan WHERE pelangganid = %s", (member_id,))
+    cursor.execute("DELETE FROM pelanggan WHERE pelangganid = %s", (member_id,))
     conn.commit()
     cursor.close()
 

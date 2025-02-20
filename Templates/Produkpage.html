@@ -39,15 +39,15 @@ Produk
                         <form id="editForm{{ produk[0] }}" method="post" action="{{ url_for('edit', produk_id=produk[0]) }}">
                             <div class="mb-4">
                                 <label for="namaproduk" class="block text-sm font-medium text-gray-700">Nama Barang</label>
-                                <input type="text" id="namaproduk{{ produk[0] }}" name="namaproduk" placeholder="Masukan nama barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="text" id="namaproduk{{ produk[0] }}" value="{{ produk[1] }}" name="namaproduk" placeholder="Masukan nama barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div class="mb-6">
                                 <label for="harga" class="block text-sm font-medium text-gray-700">Harga barang</label>
-                                <input type="number" id="harga{{ produk[0] }}" name="harga" min="0" placeholder="Masukan harga barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="number" id="harga{{ produk[0] }}" name="harga" value="{{ produk[2] }}" min="0" placeholder="Masukan harga barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div class="mb-4">
                                 <label for="stok" class="block text-sm font-medium text-gray-700">Jumlah barang</label>
-                                <input type="number" id="stok{{ produk[0] }}" name="stok" min="0" placeholder="Masukan jumlah barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <input type="number" id="stok{{ produk[0] }}" value="{{ produk[3] }}" name="stok" min="0" placeholder="Masukan jumlah barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                             </div>
                             <div class="mt-4 flex justify-end">
                                 <button type="button" onclick="closeEditModal('{{ produk[0] }}')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
@@ -76,7 +76,7 @@ Produk
             </div>
         </div>
     </div>
-    
+
     <script>
         function openModal(produkId) {
             document.getElementById('deleteForm').action = "{{ url_for('hapus', produk_id=0) }}".replace('0', produkId);

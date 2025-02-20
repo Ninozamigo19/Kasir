@@ -26,7 +26,7 @@ def signup():
             cursor.close()
             conn.close()
             # flash('Signup berhasil! Silakan login.', 'success')
-            return redirect(url_for('signin'))
+            return redirect(url_for('account'))
         except Exception as e:
             # flash(f'Error: {str(e)}', 'danger')
             return redirect(url_for('register'))

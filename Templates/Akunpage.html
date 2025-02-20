@@ -6,14 +6,14 @@ Akun
 
 {% block body1 %}
 <body class="p-8 bg-gray-100">
-    <h1 class="text-2xl font-bold mb-4">Daftar Akun</h1>
-    <button class="mb-4 bg-blue-400 text-black px-3 py-1 rounded hover:bg-blue-600"><a href="{{url_for('register')}}">tambah akun</a></button>
+    <h1 class="text-2xl font-bold mb-4">Daftar Pengguna</h1>
+    <button class="mb-4 bg-blue-400 text-black px-3 py-1 rounded hover:bg-blue-600"><a href="{{url_for('register')}}">Tambah Pengguna</a></button>
 
     <table class="w-full border-collapse border border-gray-300 bg-white">
         <thead>
             <tr class="bg-gray-200">
                 <th class="border border-gray-300 p-2">ID Pengguna</th>
-                <th class="border border-gray-300 p-2">Nama Lengkap</th>
+                <th class="border border-gray-300 p-2">Nama lengkap</th>
                 <th class="border border-gray-300 p-2">Username</th>
                 <th class="border border-gray-300 p-2">Password</th>
                 <th class="border border-gray-300 p-2">Hak Akses</th>
@@ -29,15 +29,80 @@ Akun
                 <td class="border border-gray-300 p-2">{{ akun[3] }}</td>
                 <td class="border border-gray-300 p-2">{{ akun[4] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
-                    <a href="{{url_for('editakun', user_id=akun[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
-                    <form method="POST" action="{{url_for('hapusakun', user_id=akun[0])}}" style="display: inline;">
-                        <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                            onclick="return confirm('Apakah Anda yakin ingin menghapus akun ini?')">Hapus</button>
-                    </form>
+                    <button onclick="openEditModal('{{ akun[0] }}')" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                    <button onclick="openDeleteModal('{{ akun[0] }}')" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Hapus</button>
                 </td>
             </tr>
+            <!-- Edit Modal -->
+            <div id="editModal{{ akun[0] }}" class="hidden fixed z-10 inset-0 overflow-y-auto">
+                <div class="flex items-center justify-center min-h-screen">
+                    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                        <h1 class="text-2xl font-bold mb-6 text-center">Ubah Akun</h1>
+                        <form id="editForm{{ akun[0] }}" method="post" action="{{ url_for('editakun', user_id=akun[0]) }}">
+                            <div class="mb-4">
+                                <label for="namalengkap" class="block text-sm font-medium text-gray-700">Nama lengkap</label>
+                                <input type="text" id="namalengkap" name="namalengkap" value="{{ akun[1] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                                <input type="text" id="username" name="username" value="{{ akun[2] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                                <input type="password" id="password" name="password" value="{{ akun[3] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="hakakses" class="block text-sm font-medium text-gray-700">Hak Akses</label>
+                                <select id="hakakses" name="hakakses" value="{{ akun[4] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="admin">Admin</option>
+                                    <option value="petugas">Petugas</option>
+                                </select>
+                            </div>
+                            <div class="mt-4 flex justify-end">
+                                <button type="button" onclick="closeEditModal('{{ akun[0] }}')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                                <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">Ubah</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Konfirmasi Hapus Pengguna</h2>
+                <p>Apakah Anda yakin ingin menghapus pengguna ini?</p>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                    <form id="deleteForm" method="POST" action="">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDeleteModal(userId) {
+            document.getElementById('deleteForm').action = "{{ url_for('hapusakun', user_id=0) }}".replace('0', userId);
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function openEditModal(userId) {
+            document.getElementById('editModal' + userId).classList.remove('hidden');
+        }
+
+        function closeEditModal(userId) {
+            document.getElementById('editModal' + userId).classList.add('hidden');
+        }
+    </script>
 </body>
 {% endblock %}

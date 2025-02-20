@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 conn = get_db()
 
-# @app.route('/akun', methods=['GET'])
+@app.route('/akun', methods=['GET'])
 def akun():
     cursor = conn.cursor()
     cursor.execute("SELECT userid, namalengkap, username, password, hakakses FROM pengguna")

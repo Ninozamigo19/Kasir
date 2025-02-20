@@ -27,15 +27,73 @@ Member
                 <td class="border border-gray-300 p-2">{{ pelanggan[2] }}</td>
                 <td class="border border-gray-300 p-2">{{ pelanggan[3] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
-                    <a href="{{url_for('editmember', member_id=pelanggan[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
-                    <form method="POST" action="{{ url_for('hapusmember', member_id=pelanggan[0]) }}" style="display: inline;">
-                        <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
-                    </form>
+                    <button onclick="openEditModal('{{ pelanggan[0] }}')" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
+                    <button onclick="openDeleteModal('{{ pelanggan[0] }}')" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Hapus</button>
                 </td>
             </tr>
+            <!-- Edit Modal -->
+            <div id="editModal{{ pelanggan[0] }}" class="hidden fixed z-10 inset-0 overflow-y-auto">
+                <div class="flex items-center justify-center min-h-screen">
+                    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                        <h1 class="text-2xl font-bold mb-6 text-center">Ubah Pelanggan</h1>
+                        <form id="editForm{{ pelanggan[0] }}" method="post" action="{{ url_for('editmember', member_id=pelanggan[0]) }}">
+                            <div class="mb-4">
+                                <label for="namapelanggan" class="block text-sm font-medium text-gray-700">Nama Pelanggan</label>
+                                <input type="text" id="namapelanggan" name="namapelanggan" value="{{ pelanggan[1] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="alamat" class="block text-sm font-medium text-gray-700">Alamat</label>
+                                <input type="textarea" id="alamat" name="alamat" value="{{ pelanggan[2] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="notlp" class="block text-sm font-medium text-gray-700">No Telepon</label>
+                                <input type="text" id="notlp" name="notlp" value="{{ pelanggan[3] }}" class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mt-4 flex justify-end">
+                                <button type="button" onclick="closeEditModal('{{ pelanggan[0] }}')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                                <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">Ubah</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Delete Modal -->
+    <div id="deleteModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Konfirmasi Hapus Pelanggan</h2>
+                <p>Apakah Anda yakin ingin menghapus pelanggan ini?</p>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeDeleteModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                    <form id="deleteForm" method="POST" action="">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDeleteModal(memberId) {
+            document.getElementById('deleteForm').action = "{{ url_for('hapusmember', member_id=0) }}".replace('0', memberId);
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function openEditModal(memberId) {
+            document.getElementById('editModal' + memberId).classList.remove('hidden');
+        }
+
+        function closeEditModal(memberId) {
+            document.getElementById('editModal' + memberId).classList.add('hidden');
+        }
+    </script>
 </body>
 {% endblock %}
