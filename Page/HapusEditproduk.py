@@ -7,7 +7,7 @@ app.secret_key = 'your_secret_key'
 # Koneksi ke database PostgreSQL
 conn = get_db()
 
-# @app.route('/hapus_produk/<int:produk_id>', methods=['POST'])
+@app.route('/hapus_produk/<int:produk_id>', methods=['POST'])
 def hapus_produk(produk_id):
     """Menghapus produk berdasarkan ID."""
     try:
@@ -16,10 +16,13 @@ def hapus_produk(produk_id):
             conn.commit()
             flash("Produk berhasil dihapus!", "success")
     except Exception as e:
+        conn.rollback()  # Tambahkan rollback di sini
+        print(e)
         flash(f"Terjadi kesalahan saat menghapus produk: {e}", "danger")
+    finally:
+        conn.close()  # Pastikan koneksi ditutup
     return redirect(url_for('barang'))
 
-# @app.route('/edit_produk/<int:produk_id>', methods=['GET', 'POST'])
 def edit_produk(produk_id):
     conn = get_db()
     cursor = conn.cursor()
@@ -29,13 +32,19 @@ def edit_produk(produk_id):
         namaproduk = request.form['namaproduk']
         harga = request.form['harga']
         stok = request.form['stok']
-        cursor.execute(
-            "UPDATE produk SET namaproduk = %s, harga = %s, stok = %s WHERE produkid = %s",
-            (namaproduk, harga, stok, produk_id)
-        )
-        conn.commit()
-        cursor.close()
-        conn.close()
+        try:
+            cursor.execute(
+                "UPDATE produk SET namaproduk = %s, harga = %s, stok = %s WHERE produkid = %s",
+                (namaproduk, harga, stok, produk_id)
+            )
+            conn.commit()
+        except Exception as e:
+            conn.rollback()  # Tambahkan rollback di sini
+            print(e)
+            flash(f"Terjadi kesalahan saat mengedit produk: {e}", "danger")
+        finally:
+            cursor.close()
+            conn.close()
         return redirect(url_for('barang'))
 
     # Ambil data produk

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <link href="{{ url_for('static', filename='css/tailwind.css') }}" rel="stylesheet">
+
+  <title>Konfirmasi Hapus Produk</title>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+  <div class="bg-white rounded-lg shadow-md p-6 max-w-md w-full">
+    <h1 class="text-lg font-semibold mb-4">
+      Apakah Anda yakin ingin menghapus produk berikut?
+    </h1>
+    
+    <!-- Jika ingin menampilkan detail produk, bisa ditambahkan di sini -->
+    <p class="text-gray-700 mb-6">
+      <!-- Contoh: Nama produk atau deskripsi singkat -->
+      Nama Produk: <strong>Contoh Produk</strong>
+    </p>
+
+    <div class="flex space-x-4">
+      <form action="{{ url_for('hapus', produk_id=produk_id[produkid]) }}" method="post">
+        <button
+          type="submit"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+        >
+          Ya
+        </button>
+      </form>
+      <button
+        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded"
+        onclick="window.history.back();"
+      >
+        Tidak
+      </button>
+    </div>
+  </div>
+</body>
+</html>

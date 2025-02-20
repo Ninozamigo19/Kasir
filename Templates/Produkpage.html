@@ -28,14 +28,38 @@ Produk
                 <td class="border border-gray-300 p-2">{{ produk[3] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
                     <a href="{{url_for('edit', produk_id=produk[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
-                    <form method="POST" action="{{ url_for('hapus', produk_id=produk[0]) }}" style="display: inline;">
-                        <button type="submit" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600"
-                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus</button>
-                    </form>
+                    <button onclick="openModal('{{ produk[0] }}')" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Hapus</button>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Modal -->
+    <div id="deleteModal" class="hidden fixed z-10 inset-0 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4">Konfirmasi Hapus Produk</h2>
+                <p>Apakah Anda yakin ingin menghapus produk ini?</p>
+                <div class="mt-4 flex justify-end">
+                    <button onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                    <form id="deleteForm" method="POST" action="">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(produkId) {
+            document.getElementById('deleteForm').action = "{{ url_for('hapus', produk_id=0) }}".replace('0', produkId);
+            document.getElementById('deleteModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('deleteModal').classList.add('hidden');
+        }
+    </script>
 </body>
 {% endblock %}
