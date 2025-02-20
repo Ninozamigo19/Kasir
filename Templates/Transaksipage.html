@@ -28,7 +28,7 @@ Transaksi
                         <th class="border border-gray-300 p-2">Nama Barang</th>
                         <th class="border border-gray-300 p-2">Harga</th>
                         <th class="border border-gray-300 p-2">Stok</th>
-                        <th class="border border-gray-300 p-2">Aksi</th>
+                        <th class="border border-gray-300 p-2"></th>
                     </tr>
                 </thead>
                 <tbody id="daftar-barang">
@@ -103,7 +103,7 @@ Transaksi
                 </div>
 
                 <div class="mb-4">
-                    <label for="subtotal" class="block font-bold text-gray-700 mb-1">SubTotal</label>
+                    <label for="subtotal" class="block font-bold text-gray-700 mb-1">Total</label>
                     <input
                         type="text"
                         id="subtotal"
@@ -153,7 +153,7 @@ Transaksi
             const row = button.parentElement.parentElement;
             const produkId = row.dataset.productId; // Ambil ID produk dari data attribute
             const namaBarang = row.cells[1].textContent; // Ambil nama barang dari kolom kedua
-            const hargaBarang = parseFloat(row.cells[2].textContent.replace("Rp", "").replace(/\./g, "").replace(",", ".")); // Ambil harga barang dari kolom ketiga
+            const hargaBarang = parseInt(row.cells[2].textContent.replace("Rp", "").replace(/\./g, "").replace(",", ".")); // Ambil harga barang dari kolom ketiga
             const stokCell = row.cells[3]; // Ambil sel stok
             let stok = parseInt(stokCell.textContent); // Ambil nilai stok
 
@@ -179,7 +179,7 @@ Transaksi
                     const hargaCell = rows[i].cells[1];
                     const jumlah = parseInt(jumlahCell.textContent) + 1;
                     jumlahCell.textContent = jumlah;
-                    hargaCell.textContent = `Rp.${(hargaBarang * jumlah).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+                    hargaCell.textContent = `Rp.${(hargaBarang * jumlah).toLocaleString('id-ID')}`;
                     barangDitemukan = true;
                     break;
                 }
@@ -190,7 +190,7 @@ Transaksi
                 newRow.dataset.productId = produkId;
                 newRow.innerHTML = `
                     <td class="border border-gray-300 p-2">${namaBarang}</td>
-                    <td class="border border-gray-300 p-2">Rp.${hargaBarang.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</td>
+                    <td class="border border-gray-300 p-2">Rp.${hargaBarang.toLocaleString('id-ID')}</td>
                     <td class="border border-gray-300 p-2">1</td>
                 `;
                 keranjang.appendChild(newRow);
@@ -202,24 +202,24 @@ Transaksi
             const keranjang = document.getElementById("keranjang-barang").getElementsByTagName("tr");
             let subtotal = 0;
             for (let i = 0; i < keranjang.length; i++) {
-                const harga = parseFloat(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
+                const harga = parseInt(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
                 const jumlah = parseInt(keranjang[i].cells[2].textContent, 10);
-                subtotal += harga * jumlah;
+                subtotal += harga;
             }
             document.getElementById("subtotal").value = formatRupiah(subtotal);
         }
 
         // Fungsi untuk menghitung kembalian
         function hitungKembalian() {
-            const subtotal = parseFloat(document.getElementById("subtotal").value.replace("Rp", "").replace(/\./g, "").replace(",", ".") || 0);
-            const uangDiterima = parseFloat(document.getElementById("uang-diterima").value || 0);
+            const subtotal = parseInt(document.getElementById("subtotal").value.replace("Rp", "").replace(/\./g, "").replace(",", ".") || 0);
+            const uangDiterima = parseInt(document.getElementById("uang-diterima").value || 0);
             const kembalian = uangDiterima - subtotal;
             document.getElementById("kembalian").value = kembalian >= 0 ? formatRupiah(kembalian) : '';
         }
 
         // Fungsi untuk format Rupiah
         function formatRupiah(angka) {
-            return `Rp.${angka.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+            return `Rp.${angka.toLocaleString('id-ID')}`;
         }
 
         // Fungsi untuk filter tabel
@@ -246,7 +246,7 @@ Transaksi
             for (let i = 0; i < keranjang.length; i++) {
                 const productId = keranjang[i].dataset.productId;
                 const namaBarang = keranjang[i].cells[0].textContent;
-                const harga = parseFloat(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
+                const harga = parseInt(keranjang[i].cells[1].textContent.replace("Rp", "").replace(/\./g, "").replace(",", "."));
                 const jumlah = parseInt(keranjang[i].cells[2].textContent, 10);
                 items.push({ productId, namaBarang, harga, jumlah });
             }
@@ -270,7 +270,7 @@ Transaksi
                     alert(data.message);
                     // Reset keranjang & form
                     document.getElementById("keranjang-barang").innerHTML = '';
-                    document.getElementById("subtotal").value = 'Rp.0,00';
+                    document.getElementById("subtotal").value = 'Rp.0';
                     document.getElementById("uang-diterima").value = '';
                     document.getElementById("kembalian").value = '';
                 }

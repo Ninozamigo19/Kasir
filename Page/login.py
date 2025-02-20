@@ -22,7 +22,7 @@ def get_db():
         return None
 
 # Login route
-# @app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -34,12 +34,14 @@ def login():
             return render_template('loginpage.html')
 
         cursor = conn.cursor()
-        cursor.execute("SELECT userid FROM pengguna WHERE username = %s AND password = %s", (username, password))
+        cursor.execute("SELECT userid, hakakses FROM pengguna WHERE username = %s AND password = %s", (username, password))
         user = cursor.fetchone()
         cursor.close()
         conn.close()
 
         if user:
+            session['userid'] = user[0]
+            session['hakakses'] = user[1]
             resp = make_response(redirect(url_for('home')))
             resp.set_cookie('userid', str(user[0]))  # Simpan user_id di cookie
             flash('Login berhasil!', 'success')
@@ -62,7 +64,7 @@ def home():
     userid = request.cookies.get('userid')
     if not userid:
         # flash('You must be logged in to access this page.', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('signin'))
 
     return render_template('Homepage.html')
 

@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from Page.login import get_db
 from datetime import date
-from decimal import Decimal, InvalidOperation
 import locale
 
 app = Flask(__name__)
@@ -31,14 +30,21 @@ def transaksi():
     if not items:
         return jsonify({"error": "Keranjang kosong!"}), 400
 
+    if not pelanggan_id:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO pelanggan (namapelanggan, nomortelepon)
+            VALUES (%s, %s)
+            RETURNING pelangganid
+        """, ("Pelanggan", "-"))
+        pelanggan_id = cursor.fetchone()[0]
+        cursor.close()
+
     try:
         cursor = conn.cursor()
-        totalharga = Decimal(0)
+        totalharga = 0
         for item in items:
-            try:
-                harga = Decimal(str(item['harga']).replace("Rp", "").replace(".", "").replace(",", ".")).quantize(Decimal('0.01'))
-            except (InvalidOperation, TypeError):
-                return jsonify({"error": "Invalid price format"}), 400
+            harga = int(item['harga'])
             jumlah = item['jumlah']
             totalharga += harga * jumlah
 
@@ -50,10 +56,7 @@ def transaksi():
         penjualan_id = cursor.fetchone()[0]
 
         for item in items:
-            try:
-                harga = Decimal(str(item['harga']).replace("Rp", "").replace(".", "").replace(",", ".")).quantize(Decimal('0.01'))
-            except (InvalidOperation, TypeError):
-                return jsonify({"error": "Invalid price format"}), 400
+            harga = int(item['harga'])
             jumlah = item['jumlah']
             subtotal = harga * jumlah
             cursor.execute("""
@@ -70,9 +73,10 @@ def transaksi():
 
         conn.commit()
         cursor.close()
-        return jsonify({"message": "Transaksi berhasil disimpan!"})
+        return jsonify({"message": "Transaksi berhasil disimpan!", "subtotal": locale.currency(totalharga, grouping=True)})
     except Exception as e:
         conn.rollback()
+        conn.reset()  # Reset the connection to clear the transaction block
         return jsonify({"error": str(e)}), 500
 
 @app.route('/transaksi', methods=['GET'])

@@ -23,14 +23,16 @@
                 <a href="{{ url_for('home') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Dashboard</a>
                 <a href="{{ url_for('jual') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Transaksi</a>
                 <a href="{{ url_for('barang') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Produk</a>
-                <a href="{{ url_for('pelanggan') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Pelanggan</a>
+                <a href="{{ url_for('pelanggan') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Member</a>
                 <a href="{{ url_for('detailpenjualan') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Riwayat Transaksi</a>
             </div>
             <div class="p-2 text-2xl font-bold border-b border-blue-700">
                 Pengguna
             </div>
             <div>
+                {% if session['hakakses'] == 'admin' %}
                 <a href="{{ url_for('account') }}" class="block p-2 mb-2 bg-blue-500 rounded hover:bg-blue-400">Kelola Akun</a>
+                {% endif %}
                 <a href="{{ url_for('logout') }}"class="block p-2 mb-2 bg-red-500 rounded hover:bg-red-400">Logout</a>
             </div>
         </nav>

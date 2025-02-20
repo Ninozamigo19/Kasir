@@ -35,7 +35,7 @@ def home():
     userid = request.cookies.get('userid')
     if not userid:
         flash('You must be logged in to access this page.', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('signin'))  # Perbaiki endpoint dari 'login' menjadi 'signin'
 
     return render_template('Homepage.html')
 
