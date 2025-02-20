@@ -27,10 +27,36 @@ Produk
                 <td class="border border-gray-300 p-2">{{ produk[2]|int|currency }}</td>
                 <td class="border border-gray-300 p-2">{{ produk[3] }}</td>
                 <td class="border border-gray-300 p-2 items-center justify-center">
-                    <a href="{{url_for('edit', produk_id=produk[0])}}" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</a>
+                    <button onclick="openEditModal('{{ produk[0] }}')" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">Edit</button>
                     <button onclick="openModal('{{ produk[0] }}')" class="bg-red-500 text-white px-4 py-1 rounded hover:bg-red-600">Hapus</button>
                 </td>
             </tr>
+            <!-- Edit Modal -->
+            <div id="editModal{{ produk[0] }}" class="hidden fixed z-10 inset-0 overflow-y-auto">
+                <div class="flex items-center justify-center min-h-screen">
+                    <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+                        <h1 class="text-2xl font-bold mb-6 text-center">Ubah Produk</h1>
+                        <form id="editForm{{ produk[0] }}" method="post" action="{{ url_for('edit', produk_id=produk[0]) }}">
+                            <div class="mb-4">
+                                <label for="namaproduk" class="block text-sm font-medium text-gray-700">Nama Barang</label>
+                                <input type="text" id="namaproduk{{ produk[0] }}" name="namaproduk" placeholder="Masukan nama barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-6">
+                                <label for="harga" class="block text-sm font-medium text-gray-700">Harga barang</label>
+                                <input type="number" id="harga{{ produk[0] }}" name="harga" min="0" placeholder="Masukan harga barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mb-4">
+                                <label for="stok" class="block text-sm font-medium text-gray-700">Jumlah barang</label>
+                                <input type="number" id="stok{{ produk[0] }}" name="stok" min="0" placeholder="Masukan jumlah barang" required class="mt-1 block w-full p-2 border rounded-lg border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="mt-4 flex justify-end">
+                                <button type="button" onclick="closeEditModal('{{ produk[0] }}')" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Batal</button>
+                                <button type="submit" class="bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700">Ubah</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </tbody>
     </table>
@@ -50,7 +76,7 @@ Produk
             </div>
         </div>
     </div>
-
+    
     <script>
         function openModal(produkId) {
             document.getElementById('deleteForm').action = "{{ url_for('hapus', produk_id=0) }}".replace('0', produkId);
@@ -59,6 +85,14 @@ Produk
 
         function closeModal() {
             document.getElementById('deleteModal').classList.add('hidden');
+        }
+
+        function openEditModal(produkId) {
+            document.getElementById('editModal' + produkId).classList.remove('hidden');
+        }
+
+        function closeEditModal(produkId) {
+            document.getElementById('editModal' + produkId).classList.add('hidden');
         }
     </script>
 </body>
